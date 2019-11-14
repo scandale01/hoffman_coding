@@ -23,7 +23,8 @@ int uniq_sym_qounter = 0; //variable for count how much uniq simbols are used
 int all_sym_counter = 0;
 
 int compare(const void* a, const void* b);
-void apply_freq_arr(just_node node_arr[], unsigned arr[], int size);
+void fill_symbol_arr(just_node* psymbols, unsigned int* parr);
+
 
 int main()
 {
@@ -38,62 +39,40 @@ int main()
 
     int ch=0; //where we read character from file
     while ((ch = fgetc(fp)) != EOF) {
-        for(int i=0; i <256; i++)       //creates table of frequency for elements
+        freq[(unsigned)ch]++;
+    }
+    fill_symbol_arr(symbols, freq);
+    qsort(symbols, 256, sizeof (symbols[0]), compare);
+    for(int i=0; i<256; i++)
+    {
+        if(symbols[i].freq != 0)
         {
-            if (symbols[i].ch == ch)
-            {
-                freq[i]++;
-                all_sym_counter++;
-                break;
-            }
-            if (symbols[i].ch == 0)
-            {
-                symbols[i].ch = (unsigned char) ch;
-                freq[i] = 1;
-                uniq_sym_qounter++;
-                all_sym_counter++;
-            }
+            printf("%d\n",symbols[i].freq);
         }
     }
-    apply_freq_arr(symbols, freq, 256);
-    for(int i=0; i<256; i++)
-    {
-        printf("%d", symbols[i].freq);
-    }
-    qsort(symbols, 256, sizeof(unsigned), compare);
-    printf("\n");
-    for(int i=0; i<256; i++)
-    {
-        printf("%d", symbols[i].freq);
-    }
-
     return 0;
 }
 
 int compare(const void* a, const void* b)
 {
-    int i1 = *(int*) a;
-    int i2 = *(int*) b;
-    if (i1 < i2) return -1;
-    else if (i1 == i2) return 0;
-    else return 1;
+    const unsigned* ia = (const unsigned*)a;
+    const unsigned* ib = (const unsigned*)b;
+    return *ia - *ib;
 }
 
-void apply_freq_arr(just_node node_arr[], unsigned arr[], int size)
+void fill_symbol_arr(just_node* psymbols, unsigned int* parr)
 {
-    for(int i=0; i<size; i++)
+    int i =0, j=0;
+    for(;i<256;i++)
     {
-        node_arr[i].freq= arr[i];
+        if(*(parr+i) != 0)
+        {
+            for(; j<256; j++)
+            {
+                (psymbols+j)->freq=*(parr+i);
+            }
+        }
     }
-}
-min_heap* create_min_heap(unsigned deep)
-{
-    min_heap* minHeap = (min_heap*)malloc(sizeof (min_heap));
-
-    minHeap->size = 0;          //while no one component is sorted
-    minHeap->capacity = deep;   //but we know after read file, how much different files here is
-    minHeap->array = (just_node**)malloc(minHeap->capacity * sizeof (just_node*));  //that helps us to book memory for heap with "nodes"
-    return minHeap;
 }
 
 
