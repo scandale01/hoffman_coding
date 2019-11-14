@@ -15,6 +15,7 @@ struct min_heap     //minimalnaja ku4a vseh listjev dereva, nuzna dlj9 organizac
     unsigned capacity;
     just_node** array;   //heap_node pointers
 };
+typedef struct min_heap min_heap;
 
 unsigned int freq[256] = {0};
 just_node symbols[256] = {0}; //init array of all possible nodes
@@ -68,6 +69,7 @@ int main()
 
     return 0;
 }
+
 int compare(const void* a, const void* b)
 {
     int i1 = *(int*) a;
@@ -77,14 +79,21 @@ int compare(const void* a, const void* b)
     else return 1;
 }
 
-
-
 void apply_freq_arr(just_node node_arr[], unsigned arr[], int size)
 {
     for(int i=0; i<size; i++)
     {
         node_arr[i].freq= arr[i];
     }
+}
+min_heap* create_min_heap(unsigned deep)
+{
+    min_heap* minHeap = (min_heap*)malloc(sizeof (min_heap));
+
+    minHeap->size = 0;          //while no one component is sorted
+    minHeap->capacity = deep;   //but we know after read file, how much different files here is
+    minHeap->array = (just_node**)malloc(minHeap->capacity * sizeof (just_node*));  //that helps us to book memory for heap with "nodes"
+    return minHeap;
 }
 
 
