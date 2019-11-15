@@ -42,12 +42,12 @@ int main()
         freq[(unsigned)ch]++;
     }
     fill_symbol_arr(symbols, freq);
-    qsort(symbols, 256, sizeof (symbols[0]), compare);
+    qsort((void*)symbols, 256, sizeof(symbols[0]), compare);
     for(int i=0; i<256; i++)
     {
         if(symbols[i].freq != 0)
         {
-            printf("%d\n",symbols[i].freq);
+            printf("%d, %c\n",symbols[i].freq, symbols[i].ch);
         }
     }
     return 0;
@@ -55,9 +55,9 @@ int main()
 
 int compare(const void* a, const void* b)
 {
-    const unsigned* ia = (const unsigned*)a;
-    const unsigned* ib = (const unsigned*)b;
-    return *ia - *ib;
+    const just_node* ia = (const unsigned*)a;
+    const just_node* ib = (const unsigned*)b;
+    return ia->freq - ib->freq;
 }
 
 void fill_symbol_arr(just_node* psymbols, unsigned int* parr)
@@ -67,12 +67,16 @@ void fill_symbol_arr(just_node* psymbols, unsigned int* parr)
     {
         if(*(parr+i) != 0)
         {
-            for(; j<256; j++)
-            {
-                (psymbols+j)->freq=*(parr+i);
-            }
+            (psymbols+j)->freq=*(parr+i);
+            (psymbols+j)->ch = i;
+            j++;
         }
     }
+}
+
+just_node make_new_node(just_node* parr)
+{
+
 }
 
 
