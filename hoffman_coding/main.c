@@ -74,9 +74,28 @@ void fill_symbol_arr(just_node* psymbols, unsigned int* parr)
     }
 }
 
-just_node make_new_node(just_node* parr)
+just_node* make_new_node(char symbol, unsigned weight)
 {
+    just_node* temp = (just_node*)malloc(sizeof (just_node));
+    temp->left = NULL;
+    temp->right = NULL;
+    temp->ch = symbol;
+    temp->freq = weight;
+    return temp;
+}
 
+min_heap* create_min_heap(unsigned size)
+{
+    min_heap* minimal_heap = (min_heap*)malloc(sizeof (min_heap));
+    minimal_heap->size = 0;
+    minimal_heap->capacity = size;
+    minimal_heap->array = (just_node**)malloc(minimal_heap->size * sizeof (just_node*));
+    return minimal_heap;
+}
+
+void build_tree(just_node arr)
+{
+    min_heap minimal_heap =
 }
 
 
